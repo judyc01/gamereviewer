@@ -1,83 +1,141 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hello World</title>
-  <style>
-    :root {
-      color-scheme: light;
-      font-family: Georgia, "Times New Roman", serif;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      display: grid;
-      min-height: 100vh;
-      margin: 0;
-      place-items: center;
-      background: #f4f1ea;
-      color: #20201d;
-      transition: background-color 300ms ease;
-    }
-
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0 0 1.5rem;
-      font-size: clamp(3rem, 10vw, 7rem);
-      font-weight: 400;
-      letter-spacing: 0;
-      line-height: 1;
-    }
-
-    button {
-      border: 2px solid #20201d;
-      border-radius: 999px;
-      padding: 0.8rem 1.4rem;
-      background: #20201d;
-      color: #fffdf7;
-      cursor: pointer;
-      font: inherit;
-      font-size: 1rem;
-      transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
-    }
-
-    button:hover {
-      background: transparent;
-      color: #20201d;
-      transform: translateY(-2px);
-    }
-
-    button:focus-visible {
-      outline: 3px solid #20201d;
-      outline-offset: 4px;
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f5f1" />
+  <title>Local Lens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main>
-    <h1>Hello World</h1>
-    <button id="color-button" type="button">Change background</button>
-  </main>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Local Lens home">
+        <span class="brand-mark">✦</span>
+        <span>local lens</span>
+      </a>
+      <div class="topbar-actions">
+        <button class="icon-button" aria-label="Notifications" title="Notifications">♧<span class="notification-dot"></span></button>
+        <button class="profile-chip" aria-label="Open profile">
+          <span class="avatar avatar-you">AM</span>
+          <span class="profile-name">Alex Morgan</span>
+          <span class="chevron">⌄</span>
+        </button>
+      </div>
+    </header>
 
-  <script>
-    const colorButton = document.querySelector("#color-button");
+    <main id="top" class="layout">
+      <aside class="sidebar">
+        <div class="location-card">
+          <span class="eyebrow">your circle</span>
+          <button class="location-select" id="locationSelect">Brooklyn · NY <span>⌄</span></button>
+          <p>Reviews stay close to home.</p>
+        </div>
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="feed"><span class="nav-icon">◫</span> Home <span class="nav-count">12</span></button>
+          <button class="nav-item" data-view="discover"><span class="nav-icon">⌕</span> Discover</button>
+          <button class="nav-item" data-view="saved"><span class="nav-icon">♧</span> Saved</button>
+        </nav>
+        <div class="sidebar-rule"></div>
+        <div class="group-heading"><span>MY GROUPS</span><button class="add-group" aria-label="Add group">＋</button></div>
+        <div class="group-list">
+          <button class="group-item selected" data-group="Brooklyn neighbors"><span class="group-swatch mint"></span><span>Brooklyn neighbors</span><span class="group-members">48</span></button>
+          <button class="group-item" data-group="Design friends"><span class="group-swatch coral"></span><span>Design friends</span><span class="group-members">12</span></button>
+          <button class="group-item" data-group="Weekend crew"><span class="group-swatch lilac"></span><span>Weekend crew</span><span class="group-members">8</span></button>
+        </div>
+        <div class="sidebar-bottom">
+          <div class="privacy-note"><span>◉</span><div><strong>Private by default</strong><p>Only your circles can see what you share.</p></div></div>
+          <button class="settings-link">⚙ Settings</button>
+        </div>
+      </aside>
 
-    colorButton.addEventListener("click", () => {
-      const randomColor = `hsl(${Math.floor(Math.random() * 360)} 70% 82%)`;
-      document.body.style.backgroundColor = randomColor;
-    });
-  </script>
+      <section class="content-column">
+        <div class="mobile-location"><span>Brooklyn · NY</span><button aria-label="Change location">⌄</button></div>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">THURSDAY, OCTOBER 12</p>
+            <h1>What’s worth<br /><em>your time?</em></h1>
+          </div>
+          <button class="primary-button" id="openComposer"><span>＋</span> Write a review</button>
+        </div>
+
+        <div class="privacy-banner"><span class="lock-icon">⌾</span><span>Sharing with <strong id="activeGroupLabel">Brooklyn neighbors</strong></span><button id="changeAudience">Change</button></div>
+
+        <div class="feed-toolbar">
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-filter="all">For you</button>
+            <button class="tab" data-filter="following">Following</button>
+            <button class="tab" data-filter="recent">Recent</button>
+          </div>
+          <button class="sort-button">Most useful <span>⌄</span></button>
+        </div>
+
+        <div class="feed" id="feed">
+          <article class="review-card featured" data-category="following">
+            <div class="card-topline"><span class="category-label teal">FOOD & DRINK</span><span class="post-time">2h ago</span></div>
+            <div class="reviewer"><span class="avatar avatar-rose">JL</span><div><strong>Jamie Lee</strong><span>Brooklyn neighbors · <span class="verified">●</span> verified visit</span></div><button class="more-button" aria-label="More options">•••</button></div>
+            <h2>The little spot that gets coffee <span class="highlight">right.</span></h2>
+            <p class="review-copy">Soft opening energy, serious espresso. Their cardamom latte is worth crossing the park for, and the back patio is a dream on sunny mornings.</p>
+            <div class="rating-row"><span class="stars">★★★★★</span><strong>4.8</strong><span class="rating-context">Taste · Atmosphere · Value</span></div>
+            <div class="place-pill"><span class="place-icon">⌖</span><span><strong>Oxalis Coffee</strong><small>112 Franklin St, Greenpoint</small></span><span class="arrow">↗</span></div>
+            <div class="card-actions"><button class="reaction-button liked">♡ <span>24</span></button><button class="reaction-button">◌ <span>8 comments</span></button><button class="save-button">♧</button></div>
+          </article>
+
+          <article class="review-card" data-category="recent">
+            <div class="card-topline"><span class="category-label yellow">SERVICES</span><span class="post-time">5h ago</span></div>
+            <div class="reviewer"><span class="avatar avatar-blue">MR</span><div><strong>Marcus Rivera</strong><span>Brooklyn neighbors</span></div><button class="more-button" aria-label="More options">•••</button></div>
+            <h2>Finally, a bike shop that explains things</h2>
+            <p class="review-copy">No rush, no condescension, and they fixed my shifting issue in under an hour. Bring cash for the little parts bin.</p>
+            <div class="rating-row"><span class="stars">★★★★<span class="empty-star">★</span></span><strong>4.2</strong><span class="rating-context">Expertise · Speed · Price</span></div>
+            <div class="place-pill"><span class="place-icon">⌖</span><span><strong>King Kog</strong><small>105 N 3rd St, Williamsburg</small></span><span class="arrow">↗</span></div>
+            <div class="card-actions"><button class="reaction-button">♡ <span>16</span></button><button class="reaction-button">◌ <span>3 comments</span></button><button class="save-button">♧</button></div>
+          </article>
+
+          <article class="review-card" data-category="following">
+            <div class="card-topline"><span class="category-label lilac-label">CULTURE</span><span class="post-time">Yesterday</span></div>
+            <div class="reviewer"><span class="avatar avatar-green">SK</span><div><strong>Sam Kim</strong><span>Brooklyn neighbors · Design friends</span></div><button class="more-button" aria-label="More options">•••</button></div>
+            <h2>A tiny gallery with a lot to say</h2>
+            <p class="review-copy">Go for the Thursday opening if you can. The current show turns an awkward little room into something genuinely moving.</p>
+            <div class="rating-row"><span class="stars">★★★★★</span><strong>5.0</strong><span class="rating-context">Curation · Space · Welcome</span></div>
+            <div class="place-pill"><span class="place-icon">⌖</span><span><strong>Haven Gallery</strong><small>56 Bogart St, Bushwick</small></span><span class="arrow">↗</span></div>
+            <div class="card-actions"><button class="reaction-button">♡ <span>31</span></button><button class="reaction-button">◌ <span>11 comments</span></button><button class="save-button">♧</button></div>
+          </article>
+        </div>
+        <div class="empty-state" id="emptyState" hidden><span>✦</span><h2>Nothing here yet</h2><p>Try another feed or be the first to share a local find.</p></div>
+      </section>
+
+      <aside class="right-rail">
+        <div class="rail-header"><span class="eyebrow">YOUR CIRCLES</span><button class="quiet-button">Manage</button></div>
+        <div class="circle-list">
+          <div class="circle-person"><span class="avatar avatar-rose">JL</span><span><strong>Jamie Lee</strong><small>Brooklyn neighbors</small></span><span class="online"></span></div>
+          <div class="circle-person"><span class="avatar avatar-blue">MR</span><span><strong>Marcus Rivera</strong><small>Brooklyn neighbors</small></span><span class="online"></span></div>
+          <div class="circle-person"><span class="avatar avatar-green">SK</span><span><strong>Sam Kim</strong><small>2 new reviews</small></span><span class="online"></span></div>
+          <button class="see-all">See everyone <span>→</span></button>
+        </div>
+        <div class="right-rail-divider"></div>
+        <div class="prompt-card"><span class="prompt-spark">✦</span><p class="eyebrow">A LITTLE NUDGE</p><h3>What have you tried lately?</h3><p>Your circles are curious about places, products, and apps you actually use.</p><button class="secondary-button" id="openPromptComposer">Share something <span>→</span></button></div>
+        <div class="trending"><div class="rail-header"><span class="eyebrow">TRENDING NEAR YOU</span><span class="pulse"></span></div><div class="trend-item"><span>01</span><strong>coffee shops</strong><small>18 reviews</small></div><div class="trend-item"><span>02</span><strong>bike repair</strong><small>9 reviews</small></div><div class="trend-item"><span>03</span><strong>indie cinemas</strong><small>7 reviews</small></div></div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="composerModal" hidden>
+    <section class="composer-modal" role="dialog" aria-modal="true" aria-labelledby="composerTitle">
+      <button class="close-modal" id="closeComposer" aria-label="Close">×</button>
+      <p class="eyebrow">NEW REVIEW</p><h2 id="composerTitle">Add your two cents.</h2><p class="modal-subtitle">A good review helps someone make a better choice.</p>
+      <form id="reviewForm">
+        <label>What are you reviewing?<input id="placeInput" required placeholder="Search a place, product, or app" /></label>
+        <label>Your review<textarea id="reviewInput" required placeholder="What stood out? Who would love it?"></textarea></label>
+        <div class="form-row"><label>Rating<div class="rating-input" id="ratingInput"><button type="button" data-rating="1">★</button><button type="button" data-rating="2">★</button><button type="button" data-rating="3">★</button><button type="button" data-rating="4">★</button><button type="button" data-rating="5">★</button></div></label><label>Sharing with<select id="audienceInput"><option>Brooklyn neighbors</option><option>Design friends</option><option>Weekend crew</option></select></label></div>
+        <div class="form-privacy"><span>⌾</span><span>Only members of <strong id="formAudience">Brooklyn neighbors</strong> will see this.</span></div>
+        <button class="primary-button full-width" type="submit">Publish review <span>→</span></button>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
 </body>
 </html>
