@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100a12">
+  <title>Solid Liquid Games - Game tracker</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: var(--body-font);
+      color: #d2c7d3;
+      background: #100a12;
+      font-synthesis: none;
+      --ink: #d2c7d3;
+      --muted: #958798;
+      --paper: #100a12;
+      --line: #392b40;
+      --green: #75bc98;
+      --lime: #d49be9;
+      --rose: #ff5879;
+      --body-font: Cambria, Georgia, "Times New Roman", serif;
+      --display-font: "Baskerville Old Face", Garamond, Georgia, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 84% 3%, rgba(111, 54, 139, 0.24), transparent 29rem),
+        radial-gradient(ellipse at 12% 24%, rgba(155, 43, 70, 0.15), transparent 31rem),
+        radial-gradient(ellipse at 96% 88%, rgba(39, 81, 89, 0.12), transparent 34rem),
+        var(--paper);
+      color: var(--ink);
+    }
+
+    button, textarea { font: inherit; }
+    button { color: inherit; }
+
+    .page-shell {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 0 48px 72px;
+    }
+
+    .topbar {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--ink);
+      font-family: "Old English Text MT", "Baskerville Old Face", var(--display-font);
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 31px;
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--lime);
+      color: #171a16;
+    }
+
+    .brand-mark svg { width: 19px; height: 19px; }
+
+    .topbar-end { display: flex; align-items: center; gap: 22px; }
+
+    .collection-count {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .reset-button {
+      display: inline-flex;
+      min-height: 38px;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: background-color 150ms ease, border-color 150ms ease;
+    }
+
+    .reset-button:hover { border-color: var(--ink); background: #202720; }
+    .reset-button svg { width: 15px; height: 15px; }
+
+    .intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 49px 0 36px;
+    }
+
+    .eyebrow {
+      margin: 0 0 11px;
+      color: #9b8ba2;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(38px, 5vw, 58px);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.02;
+    }
+
+    .intro-note {
+      max-width: 250px;
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-family: var(--display-font);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .shelf { display: grid; gap: 38px; }
+
+    .shelf-section { min-width: 0; }
+
+    .section-heading {
+      display: flex;
+      min-height: 39px;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .section-count { color: var(--muted); font-size: 11px; }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 17px;
+    }
+
+    .game-card {
+      position: relative;
+      min-width: 0;
+      overflow: visible;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .cover {
+      position: relative;
+      display: grid;
+      aspect-ratio: 2 / 3;
+      overflow: hidden;
+      place-items: center;
+      border: 1px solid rgba(34, 39, 34, 0.12);
+      border-radius: 5px;
+      background: linear-gradient(145deg, color-mix(in srgb, var(--cover) 62%, white), var(--cover) 72%, color-mix(in srgb, var(--cover) 72%, #171c19));
+      isolation: isolate;
+      pointer-events: none;
+    }
+
+    .cover::before, .cover::after {
+      position: absolute;
+      z-index: -1;
+      display: block;
+      content: "";
+      pointer-events: none;
+    }
+
+    .cover::before {
+      width: 76%;
+      aspect-ratio: 1;
+      right: -14%;
+      bottom: -58%;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 50%;
+      box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.08), 0 0 0 31px rgba(255, 255, 255, 0.08);
+    }
+
+    .cover::after {
+      width: 30%;
+      height: 135%;
+      left: 12%;
+      top: -19%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 50%;
+      transform: rotate(34deg);
+    }
+
+    .cover-image {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .cover.has-image { background: #100a12; }
+
+    .cover.has-image .cover-image { opacity: 1; }
+    .cover.has-image .cover-letter { opacity: 0; }
+
+    .cover-letter {
+      position: relative;
+      z-index: 1;
+      color: rgba(215, 201, 220, 0.72);
+      font-family: var(--display-font);
+      font-size: 78px;
+      line-height: 1;
+      text-shadow: 0 2px 22px rgba(20, 28, 24, 0.24);
+      transform: translateY(-2px);
+      user-select: none;
+    }
+
+    .card-actions {
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 7px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .game-card:hover .card-actions,
+    .game-card:focus-within .card-actions {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .icon-button {
+      display: grid;
+      width: 36px;
+      aspect-ratio: 1;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(218, 183, 228, 0.28);
+      border-radius: 50%;
+      background: rgba(23, 15, 28, 0.96);
+      color: #d8c9df;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.42), inset 0 1px rgba(255, 255, 255, 0.08);
+      transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    .icon-button:hover { transform: translateY(-2px) scale(1.06); }
+    .icon-button:focus-visible, .reset-button:focus-visible, .popover button:focus-visible, .star-choice:focus-visible {
+      outline: 3px solid #e6b3f6;
+      outline-offset: 2px;
+    }
+
+    .icon-button svg { width: 19px; height: 19px; filter: drop-shadow(0 0 4px currentColor); }
+    .icon-button.favorite { color: #ff8498; }
+    .icon-button.played { color: #83d0a5; }
+    .icon-button.rate-button { color: #d6a6f0; }
+    .icon-button.favorite:hover { border-color: #ff6684; background: #381723; box-shadow: 0 0 16px rgba(255, 72, 112, 0.3); }
+    .icon-button.played:hover { border-color: #68ca97; background: #153126; box-shadow: 0 0 16px rgba(76, 198, 131, 0.25); }
+    .icon-button.rate-button:hover { border-color: #c681e7; background: #2d1b3a; box-shadow: 0 0 16px rgba(180, 93, 222, 0.3); }
+    .icon-button.favorite:hover svg path, .icon-button.rate-button:hover svg path { fill: currentColor; }
+    .icon-button[aria-pressed="true"].played { color: #b9e9cf; background: #193a2c; border-color: #477c61; box-shadow: 0 0 12px rgba(66, 155, 109, 0.18), inset 0 1px rgba(255, 255, 255, 0.08); }
+    .icon-button[aria-pressed="true"].favorite { color: #ffd1d8; background: #4a1e2c; border-color: #8d3c51; box-shadow: 0 0 12px rgba(179, 56, 85, 0.2), inset 0 1px rgba(255, 255, 255, 0.08); }
+    .icon-button[aria-pressed="true"].favorite svg path { fill: currentColor; }
+    .icon-button[aria-pressed="true"].played svg path { fill: currentColor; }
+
+    .card-copy { padding: 11px 1px 0; }
+
+    .game-preview {
+      position: fixed;
+      z-index: 20;
+      width: min(360px, calc(100vw - 24px));
+      padding: 11px;
+      border: 1px solid #513d5c;
+      border-radius: 7px;
+      background: linear-gradient(155deg, #24182a, #171119 78%);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.72), 0 0 22px rgba(99, 48, 119, 0.2);
+      pointer-events: auto;
+    }
+
+    .game-preview[hidden] { display: none; }
+
+    .preview-stage {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      border: 1px solid rgba(223, 195, 232, 0.13);
+      border-radius: 4px;
+      background: #0c080f;
+    }
+
+    .preview-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .preview-image.is-loaded { opacity: 1; }
+
+    .preview-nav {
+      position: absolute;
+      inset: auto 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .preview-nav[hidden] { display: none; }
+
+    .preview-count {
+      padding: 3px 7px;
+      border-radius: 20px;
+      background: rgba(18, 12, 21, 0.82);
+      color: #d5c2dc;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .preview-copy { padding: 10px 2px 2px; }
+
+    .preview-kicker {
+      margin: 0 0 4px;
+      color: #ad83b7;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .preview-title {
+      margin: 0 0 5px;
+      color: #d2c7d3;
+      font-family: var(--display-font);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .preview-description {
+      margin: 0;
+      color: #a99bab;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .preview-status {
+      position: absolute;
+      top: 8px;
+      left: 9px;
+      padding: 3px 6px;
+      border-radius: 3px;
+      background: rgba(14, 10, 16, 0.76);
+      color: #c4b1ca;
+      font-size: 10px;
+    }
+
+    .preview-status:empty { display: none; }
+
+    .game-title {
+      overflow: hidden;
+      margin: 0 0 5px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .game-meta {
+      display: flex;
+      min-height: 16px;
+      align-items: center;
+      gap: 7px;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 11px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .meta-dot { width: 3px; height: 3px; flex: 0 0 auto; border-radius: 50%; background: #a5aa9e; }
+
+    .rating-display {
+      display: flex;
+      min-height: 24px;
+      align-items: center;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .display-stars { display: inline-flex; gap: 1px; color: #e0b75e; }
+    .display-star { position: relative; display: inline-grid; width: 14px; height: 14px; }
+    .display-star svg { width: 14px; height: 14px; }
+    .display-star .star-outline { fill: none; stroke: #e0b75e; stroke-width: 1.6; }
+    .display-star .star-fill {
+      position: absolute;
+      inset: 0;
+      fill: currentColor;
+    }
+
+    .rating-value { color: #a99c7d; font-size: 11px; font-weight: 700; }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      display: flex;
+      min-height: 80px;
+      align-items: center;
+      padding: 0 16px;
+      border: 1px dashed #485348;
+      border-radius: 5px;
+      color: var(--muted);
+      font-family: var(--display-font);
+      font-size: 15px;
+    }
+
+    .popover {
+      position: fixed;
+      z-index: 5;
+      width: min(308px, calc(100vw - 24px));
+      padding: 16px;
+      border: 1px solid #414b43;
+      border-radius: 7px;
+      background: #1b211c;
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.55);
+    }
+
+    .popover[hidden] { display: none; }
+
+    .rating-selector {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 2px 0 3px;
+    }
+
+    .star-choice {
+      position: relative;
+      display: grid;
+      width: 41px;
+      height: 42px;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 3px;
+      background: transparent;
+      color: #e0b75e;
+      cursor: pointer;
+    }
+
+    .star-choice svg { width: 31px; height: 31px; }
+    .star-choice .star-outline { fill: none; stroke: #e0b75e; stroke-width: 1.5; }
+    .star-choice .star-fill { position: absolute; inset: 5px; width: 31px; height: 31px; fill: currentColor; pointer-events: none; }
+
+    .popover-readout {
+      display: flex;
+      min-height: 28px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #aa9fac;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .clear-rating {
+      padding: 3px 5px;
+      border: 0;
+      background: transparent;
+      color: #ac92b2;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .review-input {
+      display: block;
+      width: 100%;
+      min-height: 82px;
+      resize: vertical;
+      margin: 10px 0 12px;
+      padding: 10px;
+      border: 1px solid #414b43;
+      border-radius: 4px;
+      background: #111612;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .review-input:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
+    .review-input::placeholder { color: #85798a; }
+
+    .popover-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+    .popover-actions button {
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid #465047;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .popover-actions .save-button { border-color: var(--lime); background: var(--lime); color: #171a16; }
+    .popover-actions .save-button:hover { background: var(--green); border-color: var(--green); }
+
+    @media (max-width: 768px) {
+      .page-shell { padding: 0 21px 52px; }
+      .topbar { min-height: 70px; }
+      .intro { padding: 39px 0 30px; }
+      .intro-note { max-width: 190px; font-size: 14px; }
+      .shelf { gap: 32px; }
+      .game-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 14px;
+        padding: 0 0 8px;
+        scroll-snap-type: x proximity;
+        scrollbar-color: #bfc5b7 transparent;
+        scrollbar-width: thin;
+      }
+      .game-card { flex: 0 0 154px; scroll-snap-align: start; }
+      .card-actions { opacity: 1; pointer-events: auto; transform: none; }
+    }
+
+    @media (max-width: 480px) {
+      .page-shell { padding-right: 16px; padding-left: 16px; }
+      .topbar-end { gap: 10px; }
+      .brand { font-size: 15px; }
+      .collection-count { display: none; }
+      .reset-button { min-height: 35px; padding: 0 9px; }
+      .intro { align-items: start; flex-direction: column; gap: 11px; padding-top: 34px; }
+      .intro-note { max-width: 300px; }
+    }
+
+    @media (max-width: 360px) {
+      .brand { gap: 7px; font-size: 13px; }
+    }
+
+    @media (max-width: 768px) {
+      .game-preview { width: min(320px, calc(100vw - 24px)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Solid Liquid Games home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 8h9a4.5 4.5 0 0 1 4.4 5.4l-.4 1.8a2.6 2.6 0 0 1-4.4 1.3L14 14H10l-2.1 2.5a2.6 2.6 0 0 1-4.4-1.3l-.4-1.8A4.5 4.5 0 0 1 7.5 8Z"/><path d="M7 10.5v3M5.5 12h3M16.5 11.5h.01M18.5 13.5h.01"/></svg>
+        </span>
+        <span>Solid Liquid Games</span>
+      </a>
+      <div class="topbar-end">
+        <span class="collection-count" id="collection-count"></span>
+        <button class="reset-button" id="reset-button" type="button" aria-label="Reset library">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Your personal game tracker</p>
+          <h1 id="page-title">Your game shelf</h1>
+        </div>
+        <p class="intro-note">Keep the great ones close. Find your next favorite.</p>
+      </section>
+      <div class="shelf" id="shelf" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <aside class="game-preview" id="game-preview" role="tooltip" aria-label="Game preview" hidden>
+    <div class="preview-stage">
+      <img class="preview-image" id="preview-image" alt="" aria-hidden="true">
+      <span class="preview-status" id="preview-status" role="status"></span>
+      <div class="preview-nav" id="preview-nav" hidden>
+        <span class="preview-count" id="preview-count" aria-live="off"></span>
+      </div>
+    </div>
+    <div class="preview-copy">
+      <p class="preview-kicker">Game preview</p>
+      <h2 class="preview-title" id="preview-title"></h2>
+      <p class="preview-description" id="preview-description"></p>
+    </div>
+  </aside>
+
+  <div class="popover" id="rating-popover" role="dialog" aria-label="Rate game" hidden>
+    <div class="rating-selector" id="rating-selector" role="group" aria-label="Choose a rating from zero to five stars"></div>
+    <div class="popover-readout">
+      <output id="rating-readout" aria-live="polite">Not rated</output>
+      <button class="clear-rating" id="clear-rating" type="button">Clear rating</button>
+    </div>
+    <textarea class="review-input" id="review-input" placeholder="Write a review" aria-label="Write a review"></textarea>
+    <div class="popover-actions">
+      <button id="cancel-rating" type="button">Cancel</button>
+      <button class="save-button" id="save-rating" type="button">Save</button>
+    </div>
+  </div>
+
+  <script>
+    const storageKey = "playlog-games-v1";
+    const starPath = "M12 2.2 15 8.3l6.7 1-4.9 4.8 1.2 6.7-6-3.2-6 3.2 1.2-6.7-4.9-4.8 6.7-1L12 2.2Z";
+    const gameArt = {
+      "hades": "https://cdn.akamai.steamstatic.com/steam/apps/1145360/library_600x900.jpg",
+      "stardew-valley": "https://cdn.akamai.steamstatic.com/steam/apps/413150/library_600x900.jpg",
+      "elden-ring": "https://cdn.akamai.steamstatic.com/steam/apps/1245620/library_600x900.jpg",
+      "baldurs-gate-3": "https://cdn.akamai.steamstatic.com/steam/apps/1086940/library_600x900.jpg",
+      "the-legend-of-zelda": "https://upload.wikimedia.org/wikipedia/en/f/fb/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg",
+      "cyberpunk-2077": "https://cdn.akamai.steamstatic.com/steam/apps/1091500/library_600x900.jpg",
+      "final-fantasy-xvi": "https://cdn.akamai.steamstatic.com/steam/apps/2515020/library_600x900.jpg",
+      "metal-gear-master-collection": "https://cdn.akamai.steamstatic.com/steam/apps/2131650/library_600x900.jpg",
+      "metal-gear-delta": "https://cdn.akamai.steamstatic.com/steam/apps/2417610/library_600x900.jpg",
+      "metal-gear-v": "https://cdn.akamai.steamstatic.com/steam/apps/287700/library_600x900.jpg",
+      "red-dead-redemption-2": "https://cdn.akamai.steamstatic.com/steam/apps/1174180/library_600x900.jpg",
+      "gears-5": "https://cdn.akamai.steamstatic.com/steam/apps/1097840/library_600x900.jpg",
+      "god-of-war": "https://cdn.akamai.steamstatic.com/steam/apps/1593500/library_600x900.jpg",
+      "witcher-3": "https://cdn.akamai.steamstatic.com/steam/apps/292030/library_600x900.jpg",
+      "resident-evil-2": "https://cdn.akamai.steamstatic.com/steam/apps/883710/library_600x900.jpg",
+      "resident-evil-4": "https://cdn.akamai.steamstatic.com/steam/apps/2050650/library_600x900.jpg",
+      "resident-evil-village": "https://cdn.akamai.steamstatic.com/steam/apps/1196590/library_600x900.jpg"
+    };
+    const gameDescriptions = {
+      "hades": "Fight upward through the Underworld as Zagreus, reshaping each escape attempt with new weapons and Olympian boons.",
+      "stardew-valley": "Restore an overgrown farm, build friendships, and uncover the quiet secrets of Pelican Town.",
+      "elden-ring": "Explore the Lands Between, discover its histories, and shape a Tarnished warrior through flexible combat.",
+      "baldurs-gate-3": "Gather a party in the Forgotten Realms and shape a branching fantasy adventure through choices and dice-driven combat.",
+      "the-legend-of-zelda": "Explore a vast kingdom across land and sky, using inventive abilities to solve puzzles and face powerful foes.",
+      "cyberpunk-2077": "Make your way through Night City as V, taking dangerous jobs and shaping a personal path through a high-tech underworld.",
+      "final-fantasy-xvi": "Follow Clive Rosfield through a dark fantasy conflict where nations wield the power of colossal Eikons.",
+      "metal-gear-master-collection": "Play landmark stealth adventures as Solid Snake and other operatives across a collection of classic missions.",
+      "metal-gear-delta": "Infiltrate a jungle during the Cold War, relying on camouflage, survival skills, and close-quarters tactics.",
+      "metal-gear-v": "Plan open-ended stealth operations across large combat zones, choosing your approach, equipment, and support.",
+      "red-dead-redemption-2": "Ride across a changing frontier as outlaw Arthur Morgan, balancing survival, loyalty, and a crew on the run.",
+      "gears-5": "Fight across a war-torn world in a cover-based campaign built around squad combat and large-scale battles.",
+      "god-of-war": "Journey through Norse realms as Kratos and Atreus, combining close-range combat with a personal family story.",
+      "witcher-3": "Track monsters and take contracts as Geralt of Rivia in a sprawling fantasy adventure shaped by your choices.",
+      "resident-evil-2": "Survive a citywide outbreak through intertwining campaigns, resourceful exploration, and tense encounters.",
+      "resident-evil-4": "Protect Ashley in a remote village through careful resource management, precise combat, and escalating horror.",
+      "resident-evil-village": "Search a remote village for Ethan's daughter while facing strange inhabitants and survival-horror threats."
+    };
+    const nonSteamGameplayImages = {
+      "the-legend-of-zelda": ["https://upload.wikimedia.org/wikipedia/en/2/22/Tears_of_the_kingdom_contraptions.jpg"]
+    };
+    const starterGames = [
+      { id: "hades", title: "Hades", platform: "PC / Switch", genre: "Roguelike", coverColor: "#bf654d", isPlayed: true, isFavorite: true, rating: 4.5, review: "Fast, stylish, and endlessly replayable." },
+      { id: "stardew-valley", title: "Stardew Valley", platform: "PC / Console", genre: "Simulation", coverColor: "#6c9b70", isPlayed: true, isFavorite: true, rating: 5, review: "A little place I never want to leave." },
+      { id: "elden-ring", title: "Elden Ring", platform: "PC / PlayStation", genre: "Action RPG", coverColor: "#a78a48", isPlayed: true, isFavorite: false, rating: 4, review: "A remarkable world to get lost in." },
+      { id: "baldurs-gate-3", title: "Baldur's Gate 3", platform: "PC / PlayStation", genre: "Role-playing", coverColor: "#765d87", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "the-legend-of-zelda", title: "The Legend of Zelda: TOTK", platform: "Nintendo Switch", genre: "Adventure", coverColor: "#799b61", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "cyberpunk-2077", title: "Cyberpunk 2077", platform: "PC / PlayStation", genre: "Action RPG", coverColor: "#d5a342", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "final-fantasy-xvi", title: "Final Fantasy XVI", platform: "PlayStation / PC", genre: "Action RPG", coverColor: "#70839a", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "metal-gear-master-collection", title: "Metal Gear Solid: Master Collection Vol. 1", platform: "PC / PlayStation / Switch", genre: "Stealth action", coverColor: "#8b7759", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "metal-gear-delta", title: "Metal Gear Solid Δ: Snake Eater", platform: "PC / PlayStation / Xbox", genre: "Stealth action", coverColor: "#647d50", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "metal-gear-v", title: "Metal Gear Solid V: The Phantom Pain", platform: "PC / PlayStation / Xbox", genre: "Stealth action", coverColor: "#586574", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "red-dead-redemption-2", title: "Red Dead Redemption 2", platform: "PC / PlayStation / Xbox", genre: "Western adventure", coverColor: "#9d5545", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "gears-5", title: "Gears 5", platform: "PC / Xbox", genre: "Cover shooter", coverColor: "#697c58", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "god-of-war", title: "God of War (2018)", platform: "PC / PlayStation", genre: "Action adventure", coverColor: "#5a7888", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "witcher-3", title: "The Witcher 3: Wild Hunt", platform: "PC / PlayStation / Xbox / Switch", genre: "Action RPG", coverColor: "#7b5e48", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "resident-evil-2", title: "Resident Evil 2", platform: "PC / PlayStation / Xbox", genre: "Survival horror", coverColor: "#a14145", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "resident-evil-4", title: "Resident Evil 4", platform: "PC / PlayStation / Xbox", genre: "Survival horror", coverColor: "#7a6b50", isPlayed: false, isFavorite: false, rating: 0, review: "" },
+      { id: "resident-evil-village", title: "Resident Evil Village", platform: "PC / PlayStation / Xbox", genre: "Survival horror", coverColor: "#635c6c", isPlayed: false, isFavorite: false, rating: 0, review: "" }
+    ];
+
+    function validRating(value) {
+      return Number.isFinite(value) && value >= 0 && value <= 5 && Number.isInteger(value * 2) ? value : 0;
+    }
+
+    function loadGames() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+        if (!Array.isArray(saved)) return starterGames.map(game => ({ ...game }));
+        const savedById = new Map(saved.filter(item => item && typeof item.id === "string").map(item => [item.id, item]));
+        return starterGames.map(game => {
+          const item = savedById.get(game.id);
+          if (!item) return { ...game };
+          return {
+            ...game,
+            isPlayed: item.isPlayed === true,
+            isFavorite: item.isFavorite === true,
+            rating: validRating(item.rating),
+            review: typeof item.review === "string" ? item.review : ""
+          };
+        });
+      } catch {
+        return starterGames.map(game => ({ ...game }));
+      }
+    }
+
+    let games = loadGames();
+    let popoverGameId = null;
+    let draftRating = 0;
+    let previewValue = null;
+    let returnFocus = null;
+    let activePreviewCard = null;
+    let activePreviewGameId = null;
+    let previewScreenshots = [];
+    let previewScreenshotIndex = 0;
+    let previewRequestVersion = 0;
+    let previewCloseTimer = null;
+    let previewSlideshowTimer = null;
+    const previewScreenshotCache = new Map();
+
+    const shelf = document.querySelector("#shelf");
+    const collectionCount = document.querySelector("#collection-count");
+    const popover = document.querySelector("#rating-popover");
+    const ratingSelector = document.querySelector("#rating-selector");
+    const ratingReadout = document.querySelector("#rating-readout");
+    const reviewInput = document.querySelector("#review-input");
+    const gamePreview = document.querySelector("#game-preview");
+    const previewImage = document.querySelector("#preview-image");
+    const previewTitle = document.querySelector("#preview-title");
+    const previewDescription = document.querySelector("#preview-description");
+    const previewStatus = document.querySelector("#preview-status");
+    const previewNav = document.querySelector("#preview-nav");
+    const previewCount = document.querySelector("#preview-count");
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
+    }
+
+    function ratingLabel(rating) {
+      return rating ? `${rating.toFixed(1).replace(/\.0$/, "")} / 5` : "Not rated";
+    }
+
+    function starShape(className) {
+      return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true"><path d="${starPath}"/></svg>`;
+    }
+
+    function displayStars(rating) {
+      return Array.from({ length: 5 }, (_, index) => {
+        const fill = Math.max(0, Math.min(100, (rating - index) * 100));
+        return `<span class="display-star">${starShape("star-outline")}<svg class="star-fill" viewBox="0 0 24 24" aria-hidden="true" style="clip-path:inset(0 ${100 - fill}% 0 0)"><path d="${starPath}"/></svg></span>`;
+      }).join("");
+    }
+
+    function icon(name) {
+      const paths = {
+        heart: '<path d="M20.8 4.9a5.4 5.4 0 0 0-7.6 0L12 6.1l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.3 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/>',
+        controller: '<path d="M7.5 8h9a4.5 4.5 0 0 1 4.4 5.4l-.4 1.8a2.6 2.6 0 0 1-4.4 1.3L14 14H10l-2.1 2.5a2.6 2.6 0 0 1-4.4-1.3l-.4-1.8A4.5 4.5 0 0 1 7.5 8Z"/><path d="M7 10.5v3M5.5 12h3M16.5 11.5h.01M18.5 13.5h.01"/>',
+        star: `<path d="${starPath}"/>`
+      };
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`;
+    }
+
+    function cardMarkup(game) {
+      const safeId = escapeHTML(game.id);
+      const coverColor = /^#[0-9a-f]{6}$/i.test(game.coverColor) ? game.coverColor : "#778577";
+      const coverLetter = escapeHTML(game.title.slice(0, 1));
+      const title = escapeHTML(game.title);
+      const platform = escapeHTML(game.platform);
+      const genre = escapeHTML(game.genre);
+      const imageUrl = gameArt[game.id];
+      return `<article class="game-card" tabindex="0" data-game-id="${safeId}" aria-label="${title}, ${platform}, ${genre}, ${escapeHTML(ratingLabel(game.rating))}">
+        <div class="cover" style="--cover:${coverColor}" aria-hidden="true">${imageUrl ? `<img class="cover-image" src="${imageUrl}" alt="" loading="lazy" decoding="async">` : ""}<span class="cover-letter">${coverLetter}</span></div>
+        <div class="card-actions" aria-label="${title} actions">
+          <button class="icon-button favorite" type="button" data-action="favorite" aria-label="${game.isFavorite ? "Remove" : "Add"} ${title} ${game.isFavorite ? "from" : "to"} favorites" aria-pressed="${game.isFavorite}">${icon("heart")}</button>
+          <button class="icon-button played" type="button" data-action="played" aria-label="${game.isPlayed ? "Mark" : "Add"} ${title} ${game.isPlayed ? "as not played" : "to recently played"}" aria-pressed="${game.isPlayed}">${icon("controller")}</button>
+          <button class="icon-button rate-button" type="button" data-action="rate" aria-label="Rate ${title}" aria-haspopup="dialog">${icon("star")}</button>
+        </div>
+        <div class="card-copy">
+          <h3 class="game-title" title="${title}">${title}</h3>
+          <div class="game-meta"><span>${platform}</span><span class="meta-dot" aria-hidden="true"></span><span>${genre}</span></div>
+          <div class="rating-display" aria-label="${escapeHTML(ratingLabel(game.rating))}"><span class="display-stars" aria-hidden="true">${displayStars(game.rating)}</span><span class="rating-value">${escapeHTML(ratingLabel(game.rating))}</span></div>
+        </div>
+      </article>`;
+    }
+
+    function renderRow(title, rowGames) {
+      const section = document.createElement("section");
+      section.className = "shelf-section";
+      section.setAttribute("aria-label", title);
+      const content = rowGames.length
+        ? rowGames.map(cardMarkup).join("")
+        : '<p class="empty-state">No games in this row yet.</p>';
+      section.innerHTML = `<div class="section-heading"><h2>${title}</h2><span class="section-count">${rowGames.length}</span></div><div class="game-grid">${content}</div>`;
+      section.querySelectorAll(".cover-image").forEach(image => {
+        image.addEventListener("load", () => image.closest(".cover").classList.add("has-image"), { once: true });
+        image.addEventListener("error", () => image.remove(), { once: true });
+      });
+      shelf.append(section);
+    }
+
+    function persist() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(games));
+      } catch {
+        collectionCount.textContent = `${games.length} games · storage unavailable`;
+      }
+    }
+
+    function render() {
+      hideGamePreview();
+      shelf.replaceChildren();
+      renderRow("Popular", games);
+      renderRow("Recently Played", games.filter(game => game.isPlayed));
+      renderRow("Want to Play", games.filter(game => !game.isPlayed));
+      renderRow("Favorites", games.filter(game => game.isFavorite));
+      collectionCount.textContent = `${games.length} games in your collection`;
+    }
+
+    function positionGamePreview(card) {
+      const bounds = card.getBoundingClientRect();
+      const previewBounds = gamePreview.getBoundingClientRect();
+      const margin = 12;
+      let left = bounds.right + margin;
+      if (left + previewBounds.width > window.innerWidth - margin) left = bounds.left - previewBounds.width - margin;
+      left = Math.max(margin, Math.min(left, window.innerWidth - previewBounds.width - margin));
+      const top = Math.max(margin, Math.min(bounds.top, window.innerHeight - previewBounds.height - margin));
+      gamePreview.style.left = `${left}px`;
+      gamePreview.style.top = `${top}px`;
+    }
+
+    function getGameplayScreenshots(game) {
+      if (previewScreenshotCache.has(game.id)) return previewScreenshotCache.get(game.id);
+      const appId = gameArt[game.id]?.match(/\/apps\/(\d+)\//)?.[1];
+      if (!appId) return Promise.resolve(nonSteamGameplayImages[game.id] || []);
+
+      const request = fetch(`https://store.steampowered.com/api/appdetails?appids=${appId}&filters=screenshots`)
+        .then(response => response.ok ? response.json() : null)
+        .then(result => {
+          const data = result?.[appId]?.data;
+          return data?.screenshots?.map(image => image.path_thumbnail || image.path_full).filter(Boolean) || [];
+        })
+        .catch(() => []);
+      previewScreenshotCache.set(game.id, request);
+      return request;
+    }
+
+    function showPreviewScreenshot(index, resetTimer = true) {
+      if (!previewScreenshots.length) return;
+      previewScreenshotIndex = (index + previewScreenshots.length) % previewScreenshots.length;
+      previewImage.classList.remove("is-loaded");
+      previewImage.onload = () => previewImage.classList.add("is-loaded");
+      previewImage.onerror = () => {
+        previewStatus.textContent = "Gameplay images unavailable";
+        previewNav.hidden = true;
+      };
+      previewImage.src = previewScreenshots[previewScreenshotIndex];
+      previewCount.textContent = `${previewScreenshotIndex + 1} / ${previewScreenshots.length}`;
+      previewNav.hidden = previewScreenshots.length < 2;
+      previewStatus.textContent = "";
+
+      if (resetTimer) {
+        clearInterval(previewSlideshowTimer);
+        if (previewScreenshots.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          previewSlideshowTimer = setInterval(() => showPreviewScreenshot(previewScreenshotIndex + 1, false), 1800);
+        }
+      }
+    }
+
+    async function showGamePreview(card, game) {
+      clearTimeout(previewCloseTimer);
+      if (activePreviewCard === card && activePreviewGameId === game.id) return;
+      clearInterval(previewSlideshowTimer);
+      activePreviewCard?.removeAttribute("aria-describedby");
+      activePreviewCard = card;
+      activePreviewGameId = game.id;
+      card.setAttribute("aria-describedby", "game-preview");
+      previewScreenshots = [];
+      previewScreenshotIndex = 0;
+      previewRequestVersion += 1;
+      const requestVersion = previewRequestVersion;
+      previewTitle.textContent = game.title;
+      previewDescription.textContent = gameDescriptions[game.id] || "Explore a memorable world through story, discovery, and play.";
+      previewStatus.textContent = "Loading gameplay images";
+      previewNav.hidden = true;
+      previewImage.removeAttribute("src");
+      previewImage.classList.remove("is-loaded");
+      gamePreview.hidden = false;
+      positionGamePreview(card);
+
+      const screenshots = await getGameplayScreenshots(game);
+      if (requestVersion !== previewRequestVersion || activePreviewCard !== card) return;
+      previewScreenshots = screenshots.slice(0, 6);
+      if (previewScreenshots.length) {
+        showPreviewScreenshot(0);
+      } else {
+        previewStatus.textContent = "Gameplay images unavailable";
+      }
+    }
+
+    function hideGamePreview() {
+      clearTimeout(previewCloseTimer);
+      clearInterval(previewSlideshowTimer);
+      previewRequestVersion += 1;
+      activePreviewCard?.removeAttribute("aria-describedby");
+      activePreviewCard = null;
+      activePreviewGameId = null;
+      previewScreenshots = [];
+      gamePreview.hidden = true;
+    }
+
+    function scheduleHideGamePreview() {
+      clearTimeout(previewCloseTimer);
+      previewCloseTimer = setTimeout(() => {
+        const focusInside = activePreviewCard?.contains(document.activeElement);
+        if (focusInside || activePreviewCard?.matches(":hover") || gamePreview.matches(":hover")) return;
+        hideGamePreview();
+      }, 220);
+    }
+
+    gamePreview.addEventListener("pointerenter", () => clearTimeout(previewCloseTimer));
+    gamePreview.addEventListener("pointerleave", scheduleHideGamePreview);
+
+    shelf.addEventListener("pointerover", event => {
+      if (event.pointerType === "touch") return;
+      const card = event.target.closest(".game-card");
+      if (!card || card.contains(event.relatedTarget)) return;
+      const game = games.find(item => item.id === card.dataset.gameId);
+      if (game) showGamePreview(card, game);
+    });
+
+    shelf.addEventListener("pointerout", event => {
+      const card = event.target.closest(".game-card");
+      if (card && !card.contains(event.relatedTarget)) scheduleHideGamePreview();
+    });
+
+    shelf.addEventListener("focusin", event => {
+      const card = event.target.closest(".game-card");
+      if (!card) return;
+      const game = games.find(item => item.id === card.dataset.gameId);
+      if (game) showGamePreview(card, game);
+    });
+
+    shelf.addEventListener("focusout", event => {
+      if (!event.target.closest(".game-card")?.contains(event.relatedTarget)) scheduleHideGamePreview();
+    });
+
+    window.addEventListener("resize", () => {
+      if (activePreviewCard?.isConnected && !gamePreview.hidden) positionGamePreview(activePreviewCard);
+    });
+
+    window.addEventListener("scroll", hideGamePreview, { passive: true });
+
+    function renderRatingChoices() {
+      if (!ratingSelector.children.length) {
+        ratingSelector.innerHTML = Array.from({ length: 5 }, (_, index) => {
+          const starNumber = index + 1;
+          return `<button class="star-choice" type="button" data-star="${starNumber}" aria-label="Rate ${starNumber - 0.5} to ${starNumber} out of 5">${starShape("star-outline")}<svg class="star-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="${starPath}"/></svg></button>`;
+        }).join("");
+      }
+      ratingSelector.querySelectorAll(".star-choice").forEach((button, index) => {
+        const visibleRating = previewValue ?? draftRating;
+        const fill = Math.max(0, Math.min(100, (visibleRating - index) * 100));
+        button.querySelector(".star-fill").style.clipPath = `inset(0 ${100 - fill}% 0 0)`;
+      });
+      const visibleRating = previewValue ?? draftRating;
+      ratingReadout.value = ratingLabel(visibleRating);
+      ratingReadout.textContent = ratingLabel(visibleRating);
+    }
+
+    function previewRating(value) {
+      previewValue = value;
+      renderRatingChoices();
+    }
+
+    function positionPopover(anchor) {
+      const anchorRect = anchor.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+      const margin = 12;
+      const left = Math.max(margin, Math.min(anchorRect.left + anchorRect.width / 2 - popoverRect.width / 2, window.innerWidth - popoverRect.width - margin));
+      const below = anchorRect.bottom + 10;
+      const top = below + popoverRect.height <= window.innerHeight - margin
+        ? below
+        : Math.max(margin, anchorRect.top - popoverRect.height - 10);
+      popover.style.left = `${left}px`;
+      popover.style.top = `${top}px`;
+    }
+
+    function openPopover(game, anchor) {
+      popoverGameId = game.id;
+      draftRating = game.rating;
+      previewValue = null;
+      returnFocus = anchor;
+      reviewInput.value = game.review;
+      popover.hidden = false;
+      popover.setAttribute("aria-label", `Rate ${game.title}`);
+      renderRatingChoices();
+      positionPopover(anchor);
+      ratingSelector.querySelector("button").focus();
+    }
+
+    function closePopover(restore = true) {
+      popover.hidden = true;
+      popoverGameId = null;
+      if (restore && returnFocus?.isConnected) returnFocus.focus();
+      returnFocus = null;
+    }
+
+    shelf.addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const card = button.closest("[data-game-id]");
+      const game = games.find(item => item.id === card.dataset.gameId);
+      if (!game) return;
+
+      if (button.dataset.action === "rate") {
+        hideGamePreview();
+        openPopover(game, button);
+        return;
+      }
+
+      if (button.dataset.action === "played") game.isPlayed = !game.isPlayed;
+      if (button.dataset.action === "favorite") game.isFavorite = !game.isFavorite;
+      persist();
+      render();
+    });
+
+    ratingSelector.addEventListener("pointermove", event => {
+      const button = event.target.closest("button[data-star]");
+      if (!button) return;
+      const bounds = button.getBoundingClientRect();
+      const half = event.clientX - bounds.left < bounds.width / 2;
+      previewRating(Number(button.dataset.star) - (half ? 0.5 : 0));
+    });
+
+    ratingSelector.addEventListener("pointerleave", () => previewRating(draftRating));
+
+    ratingSelector.addEventListener("click", event => {
+      const button = event.target.closest("button[data-star]");
+      if (!button) return;
+      const bounds = button.getBoundingClientRect();
+      const half = event.detail !== 0 && event.clientX - bounds.left < bounds.width / 2;
+      draftRating = Number(button.dataset.star) - (half ? 0.5 : 0);
+      previewValue = null;
+      renderRatingChoices();
+    });
+
+    ratingSelector.addEventListener("keydown", event => {
+      if (!event.target.matches("button[data-star]") || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      draftRating = Math.max(0, Math.min(5, draftRating + (event.key === "ArrowRight" ? 0.5 : -0.5)));
+      previewValue = null;
+      renderRatingChoices();
+    });
+
+    document.querySelector("#clear-rating").addEventListener("click", () => {
+      draftRating = 0;
+      previewValue = null;
+      renderRatingChoices();
+    });
+
+    document.querySelector("#save-rating").addEventListener("click", () => {
+      const game = games.find(item => item.id === popoverGameId);
+      if (!game) return;
+      game.rating = draftRating;
+      game.review = reviewInput.value;
+      const gameId = game.id;
+      persist();
+      closePopover(false);
+      render();
+      shelf.querySelector(`[data-game-id="${gameId}"] .rate-button`)?.focus();
+    });
+
+    document.querySelector("#cancel-rating").addEventListener("click", () => closePopover());
+
+    document.addEventListener("pointerdown", event => {
+      if (!popover.hidden && !popover.contains(event.target) && !event.target.closest(".rate-button")) closePopover(false);
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !popover.hidden) closePopover();
+    });
+
+    window.addEventListener("resize", () => {
+      if (popover.hidden || !returnFocus?.isConnected) return;
+      positionPopover(returnFocus);
+    });
+
+    document.querySelector("#reset-button").addEventListener("click", () => {
+      closePopover(false);
+      games = starterGames.map(game => ({ ...game }));
+      persist();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
