@@ -9,10 +9,11 @@
     :root {
       color-scheme: dark;
       font-family: var(--body-font);
-      color: #d2c7d3;
+      color: var(--ink);
       background: #100a12;
       font-synthesis: none;
       --ink: #d2c7d3;
+      --ink-glow: 0 0 8px rgba(155, 22, 42, 0.38), 0 0 18px rgba(155, 22, 42, 0.18);
       --muted: #958798;
       --paper: #100a12;
       --line: #392b40;
@@ -30,11 +31,21 @@
       min-height: 100vh;
       margin: 0;
       background:
+        linear-gradient(112deg, transparent 21%, rgba(238, 42, 72, 0.008) 26%, rgba(238, 42, 72, 0.045) 29.5%, rgba(255, 118, 137, 0.085) 30.2%, rgba(238, 42, 72, 0.045) 31%, rgba(238, 42, 72, 0.008) 35%, transparent 40%),
+        linear-gradient(68deg, transparent 49%, rgba(238, 42, 72, 0.008) 54%, rgba(238, 42, 72, 0.04) 57.5%, rgba(255, 118, 137, 0.075) 58.2%, rgba(238, 42, 72, 0.04) 59%, rgba(238, 42, 72, 0.008) 63%, transparent 68%),
+        linear-gradient(127deg, transparent 64%, rgba(238, 42, 72, 0.007) 69%, rgba(238, 42, 72, 0.038) 72.5%, rgba(255, 118, 137, 0.07) 73.2%, rgba(238, 42, 72, 0.035) 74%, rgba(238, 42, 72, 0.007) 78%, transparent 83%),
+        linear-gradient(48deg, transparent 35%, rgba(238, 42, 72, 0.007) 40%, rgba(238, 42, 72, 0.035) 43.5%, rgba(255, 118, 137, 0.065) 44.2%, rgba(238, 42, 72, 0.03) 45%, rgba(238, 42, 72, 0.006) 49%, transparent 54%),
+        linear-gradient(141deg, transparent 77%, rgba(238, 42, 72, 0.006) 82%, rgba(238, 42, 72, 0.032) 85.5%, rgba(255, 118, 137, 0.06) 86.2%, rgba(238, 42, 72, 0.028) 87%, rgba(238, 42, 72, 0.005) 91%, transparent 96%),
         radial-gradient(ellipse at 84% 3%, rgba(111, 54, 139, 0.24), transparent 29rem),
-        radial-gradient(ellipse at 12% 24%, rgba(155, 43, 70, 0.15), transparent 31rem),
+        radial-gradient(ellipse at 12% 24%, rgba(155, 43, 70, 0.09), transparent 34rem),
+        radial-gradient(ellipse at 58% 72%, rgba(225, 35, 66, 0.14), transparent 42rem),
         radial-gradient(ellipse at 96% 88%, rgba(39, 81, 89, 0.12), transparent 34rem),
         var(--paper);
       color: var(--ink);
+    }
+
+    .brand, h1, .section-heading h2, .game-title, .reset-button, .preview-count, .preview-title, .preview-status, .review-input, .popover-actions button:not(.save-button) {
+      text-shadow: var(--ink-glow);
     }
 
     button, textarea { font: inherit; }
@@ -241,7 +252,7 @@
       font-family: var(--display-font);
       font-size: 78px;
       line-height: 1;
-      text-shadow: 0 2px 22px rgba(20, 28, 24, 0.24);
+      text-shadow: var(--ink-glow);
       transform: translateY(-2px);
       user-select: none;
     }
@@ -252,7 +263,7 @@
       top: 10px;
       right: 10px;
       display: flex;
-      gap: 7px;
+      gap: 4px;
       opacity: 0;
       pointer-events: none;
       transform: translateY(-4px);
@@ -268,7 +279,7 @@
 
     .icon-button {
       display: grid;
-      width: 36px;
+      width: 32px;
       aspect-ratio: 1;
       place-items: center;
       padding: 0;
@@ -282,23 +293,32 @@
     }
 
     .icon-button:hover { transform: translateY(-2px) scale(1.06); }
+    .icon-button:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+    .icon-button:disabled:hover { transform: none; }
     .icon-button:focus-visible, .reset-button:focus-visible, .popover button:focus-visible, .star-choice:focus-visible {
       outline: 3px solid #e6b3f6;
       outline-offset: 2px;
     }
 
-    .icon-button svg { width: 19px; height: 19px; filter: drop-shadow(0 0 4px currentColor); }
+    .icon-button svg { width: 17px; height: 17px; filter: drop-shadow(0 0 4px currentColor); }
     .icon-button.favorite { color: #ff8498; }
     .icon-button.played { color: #83d0a5; }
     .icon-button.rate-button { color: #d6a6f0; }
+    .icon-button.rate-button.has-review { color: #ffb1e8; background: #2d1b3a; border-color: #a76dc0; box-shadow: 0 0 12px rgba(201, 91, 213, 0.3), 0 0 20px rgba(246, 93, 152, 0.12), inset 0 1px rgba(255, 255, 255, 0.08); }
+    .icon-button.rate-button.has-review svg path { fill: currentColor; }
+    .icon-button.rate-button.has-review:hover { border-color: #e38de0; background: #3a2040; box-shadow: 0 0 17px rgba(201, 91, 213, 0.42), 0 0 24px rgba(246, 93, 152, 0.2); }
+    .icon-button.backlog { color: #e8bf79; }
     .icon-button.favorite:hover { border-color: #ff6684; background: #381723; box-shadow: 0 0 16px rgba(255, 72, 112, 0.3); }
     .icon-button.played:hover { border-color: #68ca97; background: #153126; box-shadow: 0 0 16px rgba(76, 198, 131, 0.25); }
     .icon-button.rate-button:hover { border-color: #c681e7; background: #2d1b3a; box-shadow: 0 0 16px rgba(180, 93, 222, 0.3); }
+    .icon-button.backlog:hover { border-color: #edc36d; background: #352b1a; box-shadow: 0 0 16px rgba(220, 171, 72, 0.25); }
     .icon-button.favorite:hover svg path, .icon-button.rate-button:hover svg path { fill: currentColor; }
     .icon-button[aria-pressed="true"].played { color: #b9e9cf; background: #193a2c; border-color: #477c61; box-shadow: 0 0 12px rgba(66, 155, 109, 0.18), inset 0 1px rgba(255, 255, 255, 0.08); }
     .icon-button[aria-pressed="true"].favorite { color: #ffd1d8; background: #4a1e2c; border-color: #8d3c51; box-shadow: 0 0 12px rgba(179, 56, 85, 0.2), inset 0 1px rgba(255, 255, 255, 0.08); }
+    .icon-button[aria-pressed="true"].backlog { color: #ffedc2; background: #44351c; border-color: #8d7040; box-shadow: 0 0 12px rgba(220, 171, 72, 0.2), inset 0 1px rgba(255, 255, 255, 0.08); }
     .icon-button[aria-pressed="true"].favorite svg path { fill: currentColor; }
     .icon-button[aria-pressed="true"].played svg path { fill: currentColor; }
+    .icon-button[aria-pressed="true"].backlog svg path:first-child { fill: currentColor; }
 
     .card-copy { padding: 11px 1px 0; }
 
@@ -369,7 +389,7 @@
 
     .preview-title {
       margin: 0 0 5px;
-      color: #d2c7d3;
+      color: var(--ink);
       font-family: var(--display-font);
       font-size: 17px;
       font-weight: 400;
@@ -429,17 +449,29 @@
       margin-top: 8px;
     }
 
-    .display-stars { display: inline-flex; gap: 1px; color: #e0b75e; }
+    .display-stars {
+      display: inline-flex;
+      gap: 1px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #ff819f;
+      cursor: pointer;
+      filter: drop-shadow(0 0 3px rgba(216, 160, 239, 0.38));
+      transition: filter 160ms ease, color 160ms ease;
+    }
+    .display-stars:hover { color: #ffa0b7; filter: drop-shadow(0 0 7px rgba(248, 83, 139, 0.72)); }
+    .display-stars:focus-visible { outline: 2px solid #e6b3f6; outline-offset: 3px; border-radius: 2px; }
     .display-star { position: relative; display: inline-grid; width: 14px; height: 14px; }
     .display-star svg { width: 14px; height: 14px; }
-    .display-star .star-outline { fill: none; stroke: #e0b75e; stroke-width: 1.6; }
+    .display-star .star-outline { fill: none; stroke: #d8a0ef; stroke-width: 1.6; }
     .display-star .star-fill {
       position: absolute;
       inset: 0;
       fill: currentColor;
     }
 
-    .rating-value { color: #a99c7d; font-size: 11px; font-weight: 700; }
+    .rating-value { color: #e0a0d4; font-size: 11px; font-weight: 700; text-shadow: 0 0 8px rgba(216, 160, 239, 0.34), 0 0 14px rgba(248, 83, 139, 0.16); }
 
     .empty-state {
       grid-column: 1 / -1;
@@ -459,10 +491,10 @@
       z-index: 5;
       width: min(308px, calc(100vw - 24px));
       padding: 16px;
-      border: 1px solid #414b43;
+      border: 1px solid rgba(190, 112, 211, 0.5);
       border-radius: 7px;
-      background: #1b211c;
-      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.55);
+      background: linear-gradient(145deg, #241522, #19111d 58%, #20111a);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.62), 0 0 22px rgba(219, 49, 103, 0.19), 0 0 34px rgba(145, 74, 214, 0.16);
     }
 
     .popover[hidden] { display: none; }
@@ -484,13 +516,14 @@
       border: 0;
       border-radius: 3px;
       background: transparent;
-      color: #e0b75e;
+      color: #ff819f;
       cursor: pointer;
     }
 
     .star-choice svg { width: 31px; height: 31px; }
-    .star-choice .star-outline { fill: none; stroke: #e0b75e; stroke-width: 1.5; }
+    .star-choice .star-outline { fill: none; stroke: #d8a0ef; stroke-width: 1.5; }
     .star-choice .star-fill { position: absolute; inset: 5px; width: 31px; height: 31px; fill: currentColor; pointer-events: none; }
+    .star-choice:hover { color: #ffa0b7; filter: drop-shadow(0 0 8px rgba(248, 83, 139, 0.72)); }
 
     .popover-readout {
       display: flex;
@@ -498,7 +531,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      color: #aa9fac;
+      color: #d5b5d6;
       font-size: 12px;
       font-weight: 800;
     }
@@ -507,13 +540,14 @@
       padding: 3px 5px;
       border: 0;
       background: transparent;
-      color: #ac92b2;
+      color: #d99bcf;
       cursor: pointer;
       font-size: 11px;
       font-weight: 800;
       text-decoration: underline;
       text-underline-offset: 2px;
     }
+    .clear-rating:hover { color: #ffc0d5; }
 
     .review-input {
       display: block;
@@ -522,23 +556,31 @@
       resize: vertical;
       margin: 10px 0 12px;
       padding: 10px;
-      border: 1px solid #414b43;
+      border: 1px solid #56344f;
       border-radius: 4px;
-      background: #111612;
+      background: #150d17;
       color: var(--ink);
       font-size: 13px;
       line-height: 1.4;
     }
 
-    .review-input:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
+    .review-input:focus-visible { outline: 2px solid #d66be8; outline-offset: 1px; box-shadow: 0 0 14px rgba(187, 70, 214, 0.25); }
     .review-input::placeholder { color: #85798a; }
+    .review-limit-count {
+      margin: -7px 0 10px;
+      color: #b99eb2;
+      font-size: 9px;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .review-limit-count.at-limit { color: #ff9aaa; text-shadow: 0 0 8px rgba(248, 83, 139, 0.38); }
 
     .popover-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
     .popover-actions button {
       min-height: 34px;
       padding: 0 13px;
-      border: 1px solid #465047;
+      border: 1px solid #56344f;
       border-radius: 4px;
       background: transparent;
       cursor: pointer;
@@ -546,8 +588,9 @@
       font-weight: 800;
     }
 
-    .popover-actions .save-button { border-color: var(--lime); background: var(--lime); color: #171a16; }
-    .popover-actions .save-button:hover { background: var(--green); border-color: var(--green); }
+    .popover-actions button:hover:not(.save-button) { border-color: #ad588e; background: #2a1624; }
+    .popover-actions .save-button { border-color: #d275b8; background: linear-gradient(135deg, #e75678, #b65bca); color: #fff5fa; }
+    .popover-actions .save-button:hover { border-color: #f099c7; background: linear-gradient(135deg, #f06a88, #cb73dd); box-shadow: 0 0 16px rgba(220, 75, 145, 0.32); }
 
     @media (max-width: 768px) {
       .page-shell { padding: 0 21px 52px; }
@@ -642,7 +685,8 @@
       <output id="rating-readout" aria-live="polite">Not rated</output>
       <button class="clear-rating" id="clear-rating" type="button">Clear rating</button>
     </div>
-    <textarea class="review-input" id="review-input" placeholder="Write a review" aria-label="Write a review"></textarea>
+    <textarea class="review-input" id="review-input" placeholder="Write a review" aria-label="Write a review" aria-describedby="review-limit-count" maxlength="3000"></textarea>
+    <div class="review-limit-count" id="review-limit-count">0 / 3,000 characters</div>
     <div class="popover-actions">
       <button id="cancel-rating" type="button">Cancel</button>
       <button class="save-button" id="save-rating" type="button">Save</button>
@@ -651,6 +695,7 @@
 
   <script>
     const storageKey = "playlog-games-v1";
+    const reviewCharacterLimit = 3000;
     const starPath = "M12 2.2 15 8.3l6.7 1-4.9 4.8 1.2 6.7-6-3.2-6 3.2 1.2-6.7-4.9-4.8 6.7-1L12 2.2Z";
     const gameArt = {
       "hades": "https://cdn.akamai.steamstatic.com/steam/apps/1145360/library_600x900.jpg",
@@ -693,6 +738,72 @@
     const nonSteamGameplayImages = {
       "the-legend-of-zelda": ["https://upload.wikimedia.org/wikipedia/en/2/22/Tears_of_the_kingdom_contraptions.jpg"]
     };
+    const steamGameplayImages = {
+      "1145360": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_c0fed447426b69981cf1721756acf75369801b31.600x338.jpg?t=1758127023",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_8a9f0953e8a014bd3df2789c2835cb787cd3764d.600x338.jpg?t=1758127023"
+      ],
+      "413150": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_b887651a93b0525739049eb4194f633de2df75be.600x338.jpg?t=1786554168",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_9ac899fe2cda15d48b0549bba77ef8c4a090a71c.600x338.jpg?t=1786554168"
+      ],
+      "1245620": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_943bf6fe62352757d9070c1d33e50b92fe8539f1.600x338.jpg?t=1790290043",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_dcdac9e4b26ac0ee5248bfd2967d764fd00cdb42.600x338.jpg?t=1790290043"
+      ],
+      "1086940": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_c73bc54415178c07fef85f54ee26621728c77504.600x338.jpg?t=1777363040",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_73d93bea842b93914d966622104dcb8c0f42972b.600x338.jpg?t=1777363040"
+      ],
+      "1091500": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_2f649b68d579bf87011487d29bc4ccbfdd97d34f.600x338.jpg?t=1784714077",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_0e64170751e1ae20ff8fdb7001a8892fd48260e7.600x338.jpg?t=1784714077"
+      ],
+      "2515020": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2515020/ss_99530c1f839832ceeab2cf3450d5c0905312de47.600x338.jpg?t=1773294537",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2515020/ss_7620e893321e1661bdf821617f349196c2b0019f.600x338.jpg?t=1773294537"
+      ],
+      "2131650": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2131650/ss_c970157813f8cc0ec6c3676895148159f27fe12c.600x338.jpg?t=1737564722",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2131650/ss_e6bea5a1cca88fef6c73d6476498002abb750a55.600x338.jpg?t=1737564722"
+      ],
+      "2417610": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2417610/ss_b63fda5d26ec95f8e12d78f5d23cb19484c73bf5.600x338.jpg?t=1762249119",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2417610/ss_d8384cbc19684210c75fefd77bc2481d25db3f21.600x338.jpg?t=1762249119"
+      ],
+      "287700": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/287700/ss_258e5c725ba2da8a2fc2ee779ae75ba4b0aac0c6.600x338.jpg?t=1778872866",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/287700/ss_d4c1b17dad6eeeef8e1ade44a66d8e644afcc4e6.600x338.jpg?t=1778872866"
+      ],
+      "1174180": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1174180/ss_66b553f4c209476d3e4ce25fa4714002cc914c4f.600x338.jpg?t=1759502961",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1174180/ss_bac60bacbf5da8945103648c08d27d5e202444ca.600x338.jpg?t=1759502961"
+      ],
+      "1097840": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1097840/ss_7f5ef63810c77809b65c19734ba66ea56cf15ee2.600x338.jpg?t=1780003997",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1097840/ss_9429a77bad31287dc7c68a6925eb893eeee65f5e.600x338.jpg?t=1780003997"
+      ],
+      "1593500": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1593500/ss_6eccc970b5de2943546d93d319be1b5c0618f21b.600x338.jpg?t=1763059412",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1593500/ss_f1bff24d3967a21d303d95e11ed892e3d9113057.600x338.jpg?t=1763059412"
+      ],
+      "292030": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/f7f564ecedd09b3e503b071a637aeefdedbeedd8/ss_f7f564ecedd09b3e503b071a637aeefdedbeedd8.600x338.jpg?t=1790845156",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/0a38e4d0d57f15934772dbe09b322d08132d5518/ss_0a38e4d0d57f15934772dbe09b322d08132d5518.600x338.jpg?t=1790845156"
+      ],
+      "883710": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/883710/ss_1392581cd29817e44099cf05416b70ffb159c58b.600x338.jpg?t=1779433152",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/883710/ss_153bd5afa0b45e74b0242a3805dc29aab9f1685e.600x338.jpg?t=1779433152"
+      ],
+      "2050650": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/ss_59d1b19964cc532213df92c8287b75a0bffeb33c.600x338.jpg?t=1772502922",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/ss_ab807f8ad9e968a620777caf483cb6020367b9ee.600x338.jpg?t=1772502922"
+      ],
+      "1196590": [
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1196590/ss_d25704b01be292d1337df4fea0fba2aab322b58a.600x338.jpg?t=1776927117",
+        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1196590/ss_8113ec993ec474055c4cdce5ee86f91f7cf6663f.600x338.jpg?t=1776927117"
+      ]
+    };
     const starterGames = [
       { id: "hades", title: "Hades", platform: "PC / Switch", genre: "Roguelike", coverColor: "#bf654d", isPlayed: true, isFavorite: true, rating: 4.5, review: "Fast, stylish, and endlessly replayable." },
       { id: "stardew-valley", title: "Stardew Valley", platform: "PC / Console", genre: "Simulation", coverColor: "#6c9b70", isPlayed: true, isFavorite: true, rating: 5, review: "A little place I never want to leave." },
@@ -717,24 +828,29 @@
       return Number.isFinite(value) && value >= 0 && value <= 5 && Number.isInteger(value * 2) ? value : 0;
     }
 
+    function limitReviewCharacters(value) {
+      return value.slice(0, reviewCharacterLimit);
+    }
+
     function loadGames() {
       try {
         const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
-        if (!Array.isArray(saved)) return starterGames.map(game => ({ ...game }));
+        if (!Array.isArray(saved)) return starterGames.map(game => ({ ...game, isWantToPlay: !game.isPlayed }));
         const savedById = new Map(saved.filter(item => item && typeof item.id === "string").map(item => [item.id, item]));
         return starterGames.map(game => {
           const item = savedById.get(game.id);
-          if (!item) return { ...game };
+          if (!item) return { ...game, isWantToPlay: !game.isPlayed };
           return {
             ...game,
             isPlayed: item.isPlayed === true,
             isFavorite: item.isFavorite === true,
+            isWantToPlay: item.isPlayed === true ? false : typeof item.isWantToPlay === "boolean" ? item.isWantToPlay : true,
             rating: validRating(item.rating),
-            review: typeof item.review === "string" ? item.review : ""
+            review: typeof item.review === "string" ? limitReviewCharacters(item.review) : ""
           };
         });
       } catch {
-        return starterGames.map(game => ({ ...game }));
+        return starterGames.map(game => ({ ...game, isWantToPlay: !game.isPlayed }));
       }
     }
 
@@ -758,6 +874,7 @@
     const ratingSelector = document.querySelector("#rating-selector");
     const ratingReadout = document.querySelector("#rating-readout");
     const reviewInput = document.querySelector("#review-input");
+    const reviewLimitCount = document.querySelector("#review-limit-count");
     const gamePreview = document.querySelector("#game-preview");
     const previewImage = document.querySelector("#preview-image");
     const previewTitle = document.querySelector("#preview-title");
@@ -765,6 +882,23 @@
     const previewStatus = document.querySelector("#preview-status");
     const previewNav = document.querySelector("#preview-nav");
     const previewCount = document.querySelector("#preview-count");
+
+    function updateReviewLimitCount() {
+      const characterCount = reviewInput.value.length;
+      reviewLimitCount.textContent = `${characterCount.toLocaleString()} / ${reviewCharacterLimit.toLocaleString()} characters`;
+      reviewLimitCount.classList.toggle("at-limit", characterCount >= reviewCharacterLimit);
+    }
+
+    reviewInput.addEventListener("input", () => {
+      const cursorPosition = reviewInput.selectionStart;
+      const limitedValue = limitReviewCharacters(reviewInput.value);
+      if (limitedValue !== reviewInput.value) {
+        reviewInput.value = limitedValue;
+        const nextPosition = Math.min(cursorPosition, limitedValue.length);
+        reviewInput.setSelectionRange(nextPosition, nextPosition);
+      }
+      updateReviewLimitCount();
+    });
 
     function escapeHTML(value) {
       return String(value).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
@@ -789,7 +923,8 @@
       const paths = {
         heart: '<path d="M20.8 4.9a5.4 5.4 0 0 0-7.6 0L12 6.1l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.3 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/>',
         controller: '<path d="M7.5 8h9a4.5 4.5 0 0 1 4.4 5.4l-.4 1.8a2.6 2.6 0 0 1-4.4 1.3L14 14H10l-2.1 2.5a2.6 2.6 0 0 1-4.4-1.3l-.4-1.8A4.5 4.5 0 0 1 7.5 8Z"/><path d="M7 10.5v3M5.5 12h3M16.5 11.5h.01M18.5 13.5h.01"/>',
-        star: `<path d="${starPath}"/>`
+        star: `<path d="${starPath}"/>`,
+        backlog: '<path d="M6 4h12v16l-6-3.5L6 20V4Z"/><path d="M9 9h6M9 12h6"/>'
       };
       return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`;
     }
@@ -802,17 +937,22 @@
       const platform = escapeHTML(game.platform);
       const genre = escapeHTML(game.genre);
       const imageUrl = gameArt[game.id];
+      const hasReview = game.rating > 0 || game.review.trim().length > 0;
+      const wantToPlayLabel = game.isPlayed
+        ? `${title} is already played`
+        : `${game.isWantToPlay ? "Remove" : "Add"} ${title} ${game.isWantToPlay ? "from" : "to"} Want to Play list`;
       return `<article class="game-card" tabindex="0" data-game-id="${safeId}" aria-label="${title}, ${platform}, ${genre}, ${escapeHTML(ratingLabel(game.rating))}">
         <div class="cover" style="--cover:${coverColor}" aria-hidden="true">${imageUrl ? `<img class="cover-image" src="${imageUrl}" alt="" loading="lazy" decoding="async">` : ""}<span class="cover-letter">${coverLetter}</span></div>
         <div class="card-actions" aria-label="${title} actions">
           <button class="icon-button favorite" type="button" data-action="favorite" aria-label="${game.isFavorite ? "Remove" : "Add"} ${title} ${game.isFavorite ? "from" : "to"} favorites" aria-pressed="${game.isFavorite}">${icon("heart")}</button>
           <button class="icon-button played" type="button" data-action="played" aria-label="${game.isPlayed ? "Mark" : "Add"} ${title} ${game.isPlayed ? "as not played" : "to recently played"}" aria-pressed="${game.isPlayed}">${icon("controller")}</button>
-          <button class="icon-button rate-button" type="button" data-action="rate" aria-label="Rate ${title}" aria-haspopup="dialog">${icon("star")}</button>
+          <button class="icon-button backlog" type="button" data-action="want-to-play" aria-label="${wantToPlayLabel}" aria-pressed="${game.isWantToPlay}" title="${game.isPlayed ? "Already played" : wantToPlayLabel}" ${game.isPlayed ? "disabled" : ""}>${icon("backlog")}</button>
+          <button class="icon-button rate-button ${hasReview ? "has-review" : ""}" type="button" data-action="rate" aria-label="Rate ${title}" aria-haspopup="dialog">${icon("star")}</button>
         </div>
         <div class="card-copy">
           <h3 class="game-title" title="${title}">${title}</h3>
           <div class="game-meta"><span>${platform}</span><span class="meta-dot" aria-hidden="true"></span><span>${genre}</span></div>
-          <div class="rating-display" aria-label="${escapeHTML(ratingLabel(game.rating))}"><span class="display-stars" aria-hidden="true">${displayStars(game.rating)}</span><span class="rating-value">${escapeHTML(ratingLabel(game.rating))}</span></div>
+          <div class="rating-display"><button class="display-stars" type="button" data-action="rate" aria-label="Rate ${title}, currently ${escapeHTML(ratingLabel(game.rating))}" aria-haspopup="dialog">${displayStars(game.rating)}</button><span class="rating-value">${escapeHTML(ratingLabel(game.rating))}</span></div>
         </div>
       </article>`;
     }
@@ -845,7 +985,7 @@
       shelf.replaceChildren();
       renderRow("Popular", games);
       renderRow("Recently Played", games.filter(game => game.isPlayed));
-      renderRow("Want to Play", games.filter(game => !game.isPlayed));
+      renderRow("Want to Play", games.filter(game => game.isWantToPlay));
       renderRow("Favorites", games.filter(game => game.isFavorite));
       collectionCount.textContent = `${games.length} games in your collection`;
     }
@@ -867,13 +1007,7 @@
       const appId = gameArt[game.id]?.match(/\/apps\/(\d+)\//)?.[1];
       if (!appId) return Promise.resolve(nonSteamGameplayImages[game.id] || []);
 
-      const request = fetch(`https://store.steampowered.com/api/appdetails?appids=${appId}&filters=screenshots`)
-        .then(response => response.ok ? response.json() : null)
-        .then(result => {
-          const data = result?.[appId]?.data;
-          return data?.screenshots?.map(image => image.path_thumbnail || image.path_full).filter(Boolean) || [];
-        })
-        .catch(() => []);
+      const request = Promise.resolve(steamGameplayImages[appId] || []);
       previewScreenshotCache.set(game.id, request);
       return request;
     }
@@ -1025,6 +1159,7 @@
       previewValue = null;
       returnFocus = anchor;
       reviewInput.value = game.review;
+      updateReviewLimitCount();
       popover.hidden = false;
       popover.setAttribute("aria-label", `Rate ${game.title}`);
       renderRatingChoices();
@@ -1052,8 +1187,12 @@
         return;
       }
 
-      if (button.dataset.action === "played") game.isPlayed = !game.isPlayed;
+      if (button.dataset.action === "played") {
+        game.isPlayed = !game.isPlayed;
+        game.isWantToPlay = !game.isPlayed;
+      }
       if (button.dataset.action === "favorite") game.isFavorite = !game.isFavorite;
+      if (button.dataset.action === "want-to-play" && !game.isPlayed) game.isWantToPlay = !game.isWantToPlay;
       persist();
       render();
     });
@@ -1096,18 +1235,21 @@
       const game = games.find(item => item.id === popoverGameId);
       if (!game) return;
       game.rating = draftRating;
-      game.review = reviewInput.value;
+      game.review = limitReviewCharacters(reviewInput.value);
       const gameId = game.id;
+      const focusSelector = returnFocus?.classList.contains("display-stars")
+        ? ".rating-display [data-action='rate']"
+        : ".card-actions .rate-button";
       persist();
       closePopover(false);
       render();
-      shelf.querySelector(`[data-game-id="${gameId}"] .rate-button`)?.focus();
+      shelf.querySelector(`[data-game-id="${gameId}"] ${focusSelector}`)?.focus();
     });
 
     document.querySelector("#cancel-rating").addEventListener("click", () => closePopover());
 
     document.addEventListener("pointerdown", event => {
-      if (!popover.hidden && !popover.contains(event.target) && !event.target.closest(".rate-button")) closePopover(false);
+      if (!popover.hidden && !popover.contains(event.target) && !event.target.closest('[data-action="rate"]')) closePopover(false);
     });
 
     document.addEventListener("keydown", event => {
@@ -1121,7 +1263,7 @@
 
     document.querySelector("#reset-button").addEventListener("click", () => {
       closePopover(false);
-      games = starterGames.map(game => ({ ...game }));
+      games = starterGames.map(game => ({ ...game, isWantToPlay: !game.isPlayed }));
       persist();
       render();
     });
